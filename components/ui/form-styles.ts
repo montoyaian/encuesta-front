@@ -5,7 +5,7 @@ export const formInputClassName =
   "w-full rounded-lg border border-zinc-200/60 bg-white px-4 py-3 text-sm text-zinc-900 placeholder:text-zinc-400 transition-all duration-200 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20";
 
 export const formSubmitButtonClassName =
-  "w-full rounded-lg bg-primary px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-primary/90 active:scale-[0.98]";
+  "w-full rounded-lg bg-primary px-4 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-primary/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-primary";
 
 export const formLabelClassName =
   "block text-sm font-medium text-zinc-900 tracking-tight";

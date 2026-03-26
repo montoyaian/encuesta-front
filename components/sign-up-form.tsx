@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { actions } from "@/actions";
 import { FormError } from "@/components/form-error";
@@ -26,6 +27,30 @@ const INITIAL_STATE: RegisterFormState = {
     profile: ProfileEnum.ESTUDIANTE,
   },
 };
+
+function SignUpSubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className={formSubmitButtonClassName}
+    >
+      {pending ? (
+        <span className="inline-flex items-center gap-2">
+          <span
+            className="h-4 w-4 animate-spin rounded-full border-2 border-white/80 border-t-transparent"
+            aria-hidden="true"
+          />
+          Cargando...
+        </span>
+      ) : (
+        "Registrarme"
+      )}
+    </button>
+  );
+}
 
 export function SignUpForm() {
   const [formState, formAction] = useActionState(
@@ -119,12 +144,7 @@ export function SignUpForm() {
           </div>
         )}
 
-        <button
-          type="submit"
-          className={formSubmitButtonClassName}
-        >
-          Registrarme
-        </button>
+        <SignUpSubmitButton />
       </form>
 
       <p className="mt-8 text-center text-sm text-zinc-600">
