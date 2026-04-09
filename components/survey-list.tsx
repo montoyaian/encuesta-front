@@ -2,6 +2,7 @@ import Link from "next/link";
 import { type ReactNode } from "react";
 
 import { actions } from "@/actions";
+import { DeleteSurveyButton } from "@/components/delete-survey-button";
 import { SurveyCardBase } from "@/components/survey-card-base";
 import { type Survey } from "@/types/survey";
 
@@ -56,15 +57,11 @@ export function SurveyList({ surveys }: SurveyListProps) {
               survey={survey}
               actions={
                 <>
-                  <form action={actions.survey.deleteSurveyAction}>
-                    <input type="hidden" name="surveyId" value={String(survey.id)} />
-                    <button
-                      type="submit"
-                      className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-600 transition-all duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600 active:scale-[0.98]"
-                    >
-                      Eliminar
-                    </button>
-                  </form>
+                  <DeleteSurveyButton
+                    surveyId={String(survey.id)}
+                    surveyTitle={survey.title}
+                    deleteAction={actions.survey.deleteSurveyAction}
+                  />
                   <Link
                     href={`/dashboard/encuestas/${survey.id}/editar`}
                     className="rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 transition-all duration-200 hover:border-zinc-300 hover:bg-zinc-50 active:scale-[0.98]"
