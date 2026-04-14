@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { type FormEvent, useState } from "react";
 
 import { actions } from "@/actions";
 import { FormError } from "@/components/form-error";
@@ -28,10 +28,51 @@ const INITIAL_STATE: RegisterFormState = {
 };
 
 export function SignUpForm() {
-  const [formState, formAction] = useActionState(
-    actions.auth.registerUserAction,
-    INITIAL_STATE,
-  );
+  const [formState, setFormState] = useState<RegisterFormState>(INITIAL_STATE);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const email = String(formData.get("email") ?? "");
+    const password = String(formData.get("password") ?? "");
+    const fullName = String(formData.get("fullName") ?? "");
+    const profile =
+      String(formData.get("profile") ?? "") as ProfileEnum;
+
+    setIsLoading(true);
+
+    try {
+      const result = await actions.auth.registerUserAction(formState, formData);
+
+      if (result) {
+        setFormState(result);
+      }
+    } catch (error) {
+      setFormState({
+        success: false,
+        message: "No fue posible completar el registro",
+        zodErrors: null,
+        apiError: {
+          message:
+            error instanceof Error
+              ? error.message
+              : "Ocurrio un error inesperado",
+        },
+        data: {
+          email,
+          password,
+          fullName,
+          profile: Object.values(ProfileEnum).includes(profile)
+            ? profile
+            : ProfileEnum.ESTUDIANTE,
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={formShellClassName}>
@@ -44,7 +85,7 @@ export function SignUpForm() {
         </p>
       </div>
 
-      <form action={formAction} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
           <label htmlFor="fullName" className={formLabelClassName}>
             Nombre completo
@@ -121,9 +162,11 @@ export function SignUpForm() {
 
         <button
           type="submit"
-          className={formSubmitButtonClassName}
+          disabled={isLoading}
+          aria-busy={isLoading}
+          className={`${formSubmitButtonClassName} disabled:cursor-not-allowed disabled:opacity-70`}
         >
-          Registrarme
+          {isLoading ? "Cargando..." : "Registrarme"}
         </button>
       </form>
 

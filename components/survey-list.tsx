@@ -59,7 +59,6 @@ export function SurveyList({ surveys }: SurveyListProps) {
                 <>
                   <DeleteSurveyButton
                     surveyId={String(survey.id)}
-                    surveyTitle={survey.title}
                     deleteAction={actions.survey.deleteSurveyAction}
                   />
                   <Link
